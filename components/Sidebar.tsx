@@ -1,7 +1,7 @@
 
 import React from 'react';
 import type { View } from '../types';
-import { DashboardIcon, TestIcon, CarIcon, ChatIcon, LogoIcon } from './icons/Icons';
+import { DashboardIcon, TestIcon, CarIcon, ChatIcon, LogoIcon, ChartIcon } from './icons/Icons';
 
 interface SidebarProps {
   currentView: View;
@@ -12,6 +12,7 @@ const navItems = [
   { id: 'dashboard', label: 'Dashboard', icon: DashboardIcon },
   { id: 'learners', label: 'Learner\'s Test', icon: TestIcon },
   { id: 'drivers', label: 'Driver\'s Simulator', icon: CarIcon },
+  { id: 'progress', label: 'Progress Reports', icon: ChartIcon },
   { id: 'chatbot', label: 'AI Tutor', icon: ChatIcon },
 ];
 

@@ -1,4 +1,3 @@
-
 import { GoogleGenAI, Type } from "@google/genai";
 import type { Question, TelemetryPoint, ChatMessage } from '../types';
 
@@ -104,7 +103,7 @@ export const getChatbotResponse = async (history: ChatMessage[], newMessage: str
     try {
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: { contents },
+            contents: contents,
             config: {
                 systemInstruction: "You are a helpful assistant specializing in the South African K53 driving standard. Answer questions clearly and concisely to help learners pass their tests. Do not answer questions unrelated to driving or the K53 standard."
             }

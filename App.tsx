@@ -5,6 +5,7 @@ import DashboardView from './components/DashboardView';
 import LearnersTestView from './components/LearnersTestView';
 import SimulatorView from './components/SimulatorView';
 import ChatbotView from './components/ChatbotView';
+import ProgressView from './components/ProgressView';
 import { View } from './types';
 
 const App: React.FC = () => {
@@ -13,15 +14,17 @@ const App: React.FC = () => {
   const renderView = () => {
     switch (currentView) {
       case 'dashboard':
-        return <DashboardView />;
+        return <DashboardView setCurrentView={setCurrentView} />;
       case 'learners':
         return <LearnersTestView />;
       case 'drivers':
         return <SimulatorView />;
       case 'chatbot':
         return <ChatbotView />;
+      case 'progress':
+        return <ProgressView />;
       default:
-        return <DashboardView />;
+        return <DashboardView setCurrentView={setCurrentView} />;
     }
   };
 

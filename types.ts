@@ -1,5 +1,5 @@
 
-export type View = 'dashboard' | 'learners' | 'drivers' | 'chatbot';
+export type View = 'dashboard' | 'learners' | 'drivers' | 'chatbot' | 'progress';
 
 export interface Question {
   question: string;

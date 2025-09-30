@@ -1,42 +1,88 @@
 
 import React from 'react';
-import Card from './Card';
 import { TestIcon, CarIcon, ChartIcon, ChatIcon } from './icons/Icons';
+import { View } from '../types';
 
-const DashboardView: React.FC = () => {
+interface DashboardViewProps {
+  setCurrentView: (view: View) => void;
+}
+
+const ProgressSummary: React.FC<{setCurrentView: (view: View) => void}> = ({setCurrentView}) => (
+    <div className="bg-slate-800 p-6 rounded-lg shadow-lg mb-8 flex flex-col md:flex-row items-center justify-between">
+        <div>
+            <h2 className="text-xl font-bold text-white">Your Learning Journey</h2>
+            <p className="text-slate-400">Overall Progress: <span className="text-brand-green font-semibold">45% Complete</span></p>
+        </div>
+        <div className="flex items-center gap-6 mt-4 md:mt-0">
+            <div className="text-center">
+                <p className="text-slate-300 text-sm">Avg. Test Score</p>
+                <p className="text-2xl font-bold text-brand-light">82%</p>
+            </div>
+            <div className="text-center">
+                <p className="text-slate-300 text-sm">Sim Sessions</p>
+                <p className="text-2xl font-bold text-brand-light">3</p>
+            </div>
+            <button onClick={() => setCurrentView('progress')} className="bg-slate-700 hover:bg-brand-blue text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center">
+                <ChartIcon className="w-5 h-5 mr-2" />
+                View Full Report
+            </button>
+        </div>
+    </div>
+);
+
+
+const DashboardView: React.FC<DashboardViewProps> = ({ setCurrentView }) => {
   return (
     <div>
       <h1 className="text-3xl font-bold text-slate-100 mb-2">Welcome Back, Learner!</h1>
-      <p className="text-slate-400 mb-8">Your journey to getting your license starts here. Let's get practicing.</p>
+      <p className="text-slate-400 mb-8">Follow your personalized learning path to ace your tests.</p>
+      
+      <ProgressSummary setCurrentView={setCurrentView} />
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        <Card title="Learner's Test Practice" icon={<TestIcon className="w-8 h-8 text-brand-green" />} description="Take mock tests to prepare for your learner's license exam. Powered by AI-generated questions." buttonText="Start Test" />
-        
-        <Card title="Driving Simulator" icon={<CarIcon className="w-8 h-8 text-brand-green" />} description="Practice your driving skills in our simulator and get instant AI feedback on your performance." buttonText="Launch Simulator" />
+      <div className="space-y-6">
+        {/* Module 1 */}
+        <div className="bg-slate-800 p-6 rounded-lg shadow-lg">
+            <div className="flex items-center mb-4">
+                <div className="bg-brand-blue text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">1</div>
+                <h3 className="text-xl font-semibold text-white ml-4">K53 Foundations</h3>
+            </div>
+            <p className="text-slate-400 text-sm mb-4 ml-14">Start with the basics. Understand the rules of the road and get your questions answered by our AI Tutor.</p>
+            <div className="ml-14 flex flex-wrap gap-4">
+                 <button onClick={() => alert('Study materials coming soon!')} className="bg-slate-700 hover:bg-brand-blue text-white font-semibold py-2 px-4 rounded-lg transition-colors">
+                    Read Study Guide
+                </button>
+                 <button onClick={() => setCurrentView('chatbot')} className="bg-slate-700 hover:bg-brand-blue text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center">
+                    <ChatIcon className="w-5 h-5 mr-2" /> Ask AI Tutor
+                </button>
+            </div>
+        </div>
 
-        <Card title="Progress Reports" icon={<ChartIcon className="w-8 h-8 text-brand-green" />} description="Track your test scores and simulator performance over time. Identify areas for improvement." buttonText="View Reports" />
+        {/* Module 2 */}
+        <div className="bg-slate-800 p-6 rounded-lg shadow-lg">
+            <div className="flex items-center mb-4">
+                <div className="bg-brand-blue text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">2</div>
+                <h3 className="text-xl font-semibold text-white ml-4">Learner's Test Preparation</h3>
+            </div>
+            <p className="text-slate-400 text-sm mb-4 ml-14">Put your knowledge to the test with unlimited, AI-generated practice exams that mimic the real thing.</p>
+            <div className="ml-14">
+                 <button onClick={() => setCurrentView('learners')} className="bg-brand-green hover:bg-brand-light text-brand-dark font-bold py-3 px-6 rounded-lg transition-colors flex items-center text-lg">
+                    <TestIcon className="w-6 h-6 mr-2" /> Take a Mock Test
+                </button>
+            </div>
+        </div>
 
-        <Card title="AI Tutor Chatbot" icon={<ChatIcon className="w-8 h-8 text-brand-green" />} description="Have questions about K53 rules or driving maneuvers? Ask our AI Tutor anytime." buttonText="Ask a Question" />
-
-        <div className="md:col-span-2 p-6 bg-slate-800 rounded-lg shadow-lg">
-            <h3 className="text-lg font-semibold text-white mb-3">Your Recent Activity</h3>
-            <ul className="space-y-3 text-slate-300">
-                <li className="flex items-center">
-                    <span className="bg-green-500/20 text-green-300 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">PASS</span>
-                    Learner's Test: Road Signs - Score: 92%
-                    <span className="ml-auto text-xs text-slate-400">Yesterday</span>
-                </li>
-                <li className="flex items-center">
-                    <span className="bg-blue-500/20 text-blue-300 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">SESSION</span>
-                    Simulator: Urban Driving - 15 mins
-                    <span className="ml-auto text-xs text-slate-400">2 days ago</span>
-                </li>
-                 <li className="flex items-center">
-                    <span className="bg-yellow-500/20 text-yellow-300 text-sm font-medium mr-3 px-2.5 py-0.5 rounded-full">REVIEW</span>
-                    AI Feedback on Parallel Parking received.
-                    <span className="ml-auto text-xs text-slate-400">2 days ago</span>
-                </li>
-            </ul>
+        {/* Module 3 */}
+        <div className="bg-slate-800 p-6 rounded-lg shadow-lg">
+            <div className="flex items-center mb-4">
+                <div className="bg-brand-blue text-white rounded-full h-10 w-10 flex items-center justify-center font-bold text-xl">3</div>
+                <h3 className="text-xl font-semibold text-white ml-4">Practical Driving Skills</h3>
+            </div>
+            <p className="text-slate-400 text-sm mb-4 ml-14">Hone your skills in the driver's simulator. Review your performance with detailed telemetry and AI feedback.</p>
+            <div className="ml-14">
+                 <button onClick={() => setCurrentView('drivers')} className="bg-slate-700 hover:bg-brand-blue text-white font-semibold py-2 px-4 rounded-lg transition-colors flex items-center">
+                    <CarIcon className="w-5 h-5 mr-2" /> Launch Simulator
+                </button>
+            </div>
         </div>
       </div>
     </div>
