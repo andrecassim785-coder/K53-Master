@@ -1,17 +1,18 @@
-
-import React from 'react';
-import { TestIcon, CarIcon, ChartIcon, ChatIcon } from './icons/Icons';
+import React, { useState, useEffect } from 'react';
+import { TestIcon, CarIcon, ChartIcon, ChatIcon, EditIcon, LogoutIcon, UserIcon, FeedbackIcon } from './icons/Icons';
 import { View } from '../types';
+import FeedbackModal from './FeedbackModal';
 
 interface DashboardViewProps {
   setCurrentView: (view: View) => void;
+  onLogout: () => void;
 }
 
-const ProgressSummary: React.FC<{setCurrentView: (view: View) => void}> = ({setCurrentView}) => (
+const ProgressSummary: React.FC<{setCurrentView: (view: View) => void; progress: number}> = ({setCurrentView, progress}) => (
     <div className="bg-slate-800 p-6 rounded-lg shadow-lg mb-8 flex flex-col md:flex-row items-center justify-between">
         <div>
             <h2 className="text-xl font-bold text-white">Your Learning Journey</h2>
-            <p className="text-slate-400">Overall Progress: <span className="text-brand-green font-semibold">45% Complete</span></p>
+            <p className="text-slate-400">Overall Progress: <span className="text-brand-green font-semibold">{progress}% Complete</span></p>
         </div>
         <div className="flex items-center gap-6 mt-4 md:mt-0">
             <div className="text-center">
@@ -31,13 +32,83 @@ const ProgressSummary: React.FC<{setCurrentView: (view: View) => void}> = ({setC
 );
 
 
-const DashboardView: React.FC<DashboardViewProps> = ({ setCurrentView }) => {
+const DashboardView: React.FC<DashboardViewProps> = ({ setCurrentView, onLogout }) => {
+    const [userName, setUserName] = useState('Learner');
+    const [progress, setProgress] = useState(0);
+    const [profilePicture, setProfilePicture] = useState<string | null>(null);
+    const [isFeedbackModalOpen, setFeedbackModalOpen] = useState(false);
+
+    useEffect(() => {
+        const storedProfile = localStorage.getItem('userProfile');
+        if (storedProfile) {
+            const profile = JSON.parse(storedProfile);
+            if (profile.name) {
+                setUserName(profile.name);
+            }
+            setProgress(profile.progress || 0);
+            setProfilePicture(profile.profilePicture || null);
+        }
+    }, []);
+    
+    const handleFeedbackSubmit = (feedbackText: string) => {
+        try {
+            const existingFeedback = JSON.parse(localStorage.getItem('userFeedback') || '[]');
+            const newFeedback = {
+                text: feedbackText,
+                timestamp: new Date().toISOString(),
+            };
+            localStorage.setItem('userFeedback', JSON.stringify([...existingFeedback, newFeedback]));
+            return true;
+        } catch (error) {
+            console.error("Failed to save feedback:", error);
+            return false;
+        }
+    };
+
+
   return (
     <div>
-      <h1 className="text-3xl font-bold text-slate-100 mb-2">Welcome Back, Learner!</h1>
-      <p className="text-slate-400 mb-8">Follow your personalized learning path to ace your tests.</p>
+        <div className="flex items-center justify-between mb-2">
+            <div className="flex items-center gap-4">
+                {profilePicture ? (
+                    <img src={profilePicture} alt="Profile" className="w-12 h-12 rounded-full object-cover" />
+                ) : (
+                    <div className="w-12 h-12 rounded-full bg-slate-700 flex items-center justify-center">
+                        <UserIcon className="w-8 h-8 text-slate-400"/>
+                    </div>
+                )}
+                <h1 className="text-3xl font-bold text-slate-100">Welcome Back, {userName}!</h1>
+            </div>
+            <div className="flex items-center gap-2">
+                <button
+                    onClick={() => setCurrentView('profile')}
+                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-slate-700"
+                    aria-label="Edit user profile"
+                >
+                    <EditIcon className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden sm:inline">Edit Profile</span>
+                </button>
+                 <button
+                    onClick={() => setFeedbackModalOpen(true)}
+                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-slate-700"
+                    aria-label="Give feedback"
+                >
+                    <FeedbackIcon className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden sm:inline">Feedback</span>
+                </button>
+                <button
+                    onClick={onLogout}
+                    className="flex items-center gap-2 text-slate-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-slate-700"
+                    aria-label="Log out"
+                >
+                    <LogoutIcon className="w-5 h-5" />
+                    <span className="text-sm font-medium hidden sm:inline">Logout</span>
+                </button>
+            </div>
+        </div>
+      <p className="text-slate-400 mb-8 ml-16">Follow your personalized learning path to ace your tests.</p>
       
-      <ProgressSummary setCurrentView={setCurrentView} />
+      <ProgressSummary setCurrentView={setCurrentView} progress={progress} />
 
       <div className="space-y-6">
         {/* Module 1 */}
@@ -85,6 +156,11 @@ const DashboardView: React.FC<DashboardViewProps> = ({ setCurrentView }) => {
             </div>
         </div>
       </div>
+       <FeedbackModal 
+        isOpen={isFeedbackModalOpen}
+        onClose={() => setFeedbackModalOpen(false)}
+        onSubmit={handleFeedbackSubmit}
+      />
     </div>
   );
 };

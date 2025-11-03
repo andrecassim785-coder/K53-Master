@@ -1,8 +1,9 @@
 
-export type View = 'dashboard' | 'learners' | 'drivers' | 'chatbot' | 'progress';
+export type View = 'dashboard' | 'learners' | 'drivers' | 'chatbot' | 'progress' | 'profile';
 
 export interface Question {
   question: string;
+  image?: string; // Optional field for base64 encoded image
   options: string[];
   correctAnswer: string;
   explanation: string;
